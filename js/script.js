@@ -53,29 +53,62 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function setClock(selector, endtime){
+    function setClock(selector, endtime) {
         const timer = document.querySelector(selector),
-        days = timer.querySelector('#days'),
-        hours = timer.querySelector('#hours'),
-        minutes = timer.querySelector('#minutes'),
-        seconds = timer.querySelector('#seconds'),
-        timeInterval = setInterval(updateClock, 1000);
+            days = timer.querySelector('#days'),
+            hours = timer.querySelector('#hours'),
+            minutes = timer.querySelector('#minutes'),
+            seconds = timer.querySelector('#seconds'),
+            timeInterval = setInterval(updateClock, 1000);
 
         updateClock();
 
-        function updateClock(){
+        function updateClock() {
             const t = getTimeRemaining(endtime);
             days.innerHTML = t.days;
             hours.innerHTML = t.hours;
             minutes.innerHTML = (t.minutes < 10) ? '0' + t.minutes : t.minutes;
             seconds.innerHTML = t.seconds;
 
-            if(t.total <= 0){
+            if (t.total <= 0) {
                 clearInterval(timeInterval);
             }
         }
     }
 
     setClock('.timer', deadLine);
+
+    // Modal
+
+    const modalTrigger = document.querySelectorAll('[data-modal]'),
+        modal = document.querySelector('.modal'),
+        modalCloseBtn = document.querySelector('[data-close]');
+
+    modalTrigger.forEach(btn => {
+        btn.addEventListener('click', () => {
+            // modal.classList.add('show');
+            // modal.classList.remove('hide');
+            modal.classList.toggle('hide');
+            document.body.style.overflow = 'hidden';
+        });
+
+    });
+
+    function closeModal(){
+        modal.classList.toggle('hide');
+        document.body.style.overflow = '';            
+    }
+
+    modalCloseBtn.addEventListener('click', closeModal);
+
+    modal.addEventListener('click', (e)=>{
+        if (e.target == modal){
+            closeModal();
+        }
+    });
+
+    document.addEventListener('keydown', (e)=>{
+        if(e.code == "Escape" && modal.classList.contains('show')) {closeModal();}
+    });
 
 });
